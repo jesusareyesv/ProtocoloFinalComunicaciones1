@@ -94,7 +94,7 @@ Al iniciar la partida, el servidor envía las fichas a cada jugador mediante uni
         {
             "token": "estoesuntoken",
             "entero_uno": 6,
-            entero_dos: 1
+            "entero_dos": 1
         },
         {
             "token": "estoesuntoken",
@@ -137,16 +137,17 @@ Mensaje de juego:
 ```json
 {
 	"identificador": "DOMINOCOMUNICACIONESI",
-	"jugador": "MAC del jugador que debe iniciar o que tiene el turno"
+	"jugador": "MAC del jugador que debe iniciar o que tiene el turno",
 	"tipo": 0,
-	"punta_uno": "Número inicial de la lista o -1"
-    	"punta_dos": "Número final de la lista o -1"
-    	"evento_pasado": {
+	"punta_uno": "Número inicial de la lista o -1",
+    "punta_dos": "Número final de la lista o -1",
+    "evento_pasado": {
             "tipo": 0,
-            "jugador": //MAC de quien jugó
-    	"ficha": { 
-		"entero_uno": 6, 
-    		"entero_dos": 6, 
+            "jugador": "MAC de quien jugó",
+    	    "ficha": { 
+		        "entero_uno": 6, 
+    		    "entero_dos": 6
+            },
     		"punta": "true //Booleano indicando el lugar de juego. True: punta uno. False: punta dos "
     	} //Este campo no existirá en el tipo de evento 2
     } 
@@ -169,26 +170,26 @@ Mensaje de fin de ronda:
 Mensaje de fin de partida:
 ```json
 {
-	identificador: ‘DOMINOCOMUNICACIONESI’
-	jugador: //MAC del jugador que ganó la partida
-	tipo: 2
+	"identificador": "DOMINOCOMUNICACIONESI",
+	"jugador": "MAC del jugador que ganó la partida",
+	"tipo": 2,
 	//Puntuación de los jugadores
-	puntuacion_general: [
+	"puntuacion_general": [
         {
-        jugador: //MAC del jugador,
-            puntuacion: //Puntuación del jugador
+            "jugador": "MAC del jugador",
+            "puntuacion": "Puntuación del jugador"
         }
-    ]
-    razon: //Descripción del fin de la partida. Máximo 45 caracteres	
+    ],
+    "razon": "Descripción del fin de la partida. Máximo 45 caracteres"
 }
 ```
 
 Mensaje de desconexión:
 ```json
 {
-	identificador: ‘DOMINOCOMUNICACIONESI’,
-	jugador: //MAC del jugador que se desconectó,
-	tipo: 3
+	"identificador": "DOMINOCOMUNICACIONESI",
+	"jugador": "MAC del jugador que se desconectó",
+	"tipo": 3
 }
 ```
 
@@ -196,18 +197,26 @@ Mensaje de desconexión:
 Cada jugador justo después del mensaje de juego enviará un mensaje unicast con la información de su jugada, esto si está en turno, si no, un mensaje para confirmar que sigue en línea. Ejemplo:
 
 Jugador en turno y jugando:
+
+```json
 {
-	identificador: ‘DOMINOCOMUNICACIONESI’
-	ficha: { token: ‘estoesuntoken’  } //Objeto ficha
-	punta: //Booleano indicando el lugar de juego. True: punta uno. False: punta dos
+	"identificador": "DOMINOCOMUNICACIONESI",
+	"ficha": { 
+        "token": "estoesuntoken"  
+        },
+	"punta": "Booleano indicando el lugar de juego. True: punta uno. False: punta dos"
 }
+```
 
 *Nota:* Si el token es -1, significa que el jugador quiere pasar.
 
 Jugador que no está en turno (mensaje unicast):
+
+```json
 {
-	identificador: ‘DOMINOCOMUNICACIONESI’
-	jugador: //MAC del jugador
+	"identificador": "DOMINOCOMUNICACIONESI",
+	"jugador": "MAC del jugador"
 }
+```
 
 *Nota:* el servidor espera este mensaje durante 10 segundos, si no hay respuesta asume que el cliente se desconectó. También, este mensaje será igual para cada turno.
