@@ -41,7 +41,7 @@ Durante las comunicaciones del juego se enviarán exclusivamente objetos de tipo
 Cada objeto de tendrá en su body una clave identificador con el valor DOMINOCOMUNICACIONESI. Ejemplo:
 ```json
 {	
-    identificador: ‘DOMINOCOMUNICACIONESI’	
+    "identificador": "DOMINOCOMUNICACIONESI"
 }
 ```
 
@@ -50,23 +50,23 @@ El servidor inicia una mesa escuchando por el puerto 3001.
 El cliente se inicia y envía un broadcast para conocer las mesas disponibles. Ejemplo:
 ```json
 { 	
-    identificador: ‘DOMINOCOMUNICACIONESI’	
+    "identificador": "DOMINOCOMUNICACIONESI"
 }
 ```
 
 El servidor responde (si y solo si, hay por lo menos un espacio disponible) al broadcast del cliente con un mensaje unicast UDP para darle a saber que hay una mesa disponible. Ejemplo:
 ```json
 {
-	identificador: ‘DOMINOCOMUNICACIONESI’	
-    nombre_mesa: //Nombre de la mesa definido por el servidor
+	"identificador": "DOMINOCOMUNICACIONESI",
+    	"nombre_mesa": "Nombre de la mesa definido por el servidor"
 }
 ```
 
 El cliente, luego de conocer las mesas disponibles, selecciona la mesa a la que se quiere conectar enviándole un mensaje unicast TCP al servidor. Ejemplo:
 ```json
 {
-	identificador: ‘DOMINOCOMUNICACIONESI’	
-    nombre_jugador: //Nombre del jugador definido por el cliente
+	"identificador": "DOMINOCOMUNICACIONESI",
+    	"nombre_jugador": "Nombre del jugador definido por el cliente"
 }
 ```
 
@@ -78,9 +78,9 @@ El cliente, luego de conocer las mesas disponibles, selecciona la mesa a la que 
 El servidor responde al unicast del cliente con un mensaje para confirmar la conexión. Ejemplo:
 ```json
 {
-	identificador: ‘DOMINOCOMUNICACIONESI’,
-	multicast_ip: //IP multicast definida por el servidor,
-	disponible: //Verdadero o falso. Esto es un booleano
+	"identificador": "DOMINOCOMUNICACIONESI",
+	"multicast_ip": "IP multicast definida por el servidor",
+	"disponible": "Verdadero o falso. Esto es un booleano"
 }
 ```
 
@@ -89,27 +89,27 @@ El servidor responde al unicast del cliente con un mensaje para confirmar la con
 Al iniciar la partida, el servidor envía las fichas a cada jugador mediante unicast. Ejemplo:
 ```json
 	{
-	identificador: ‘DOMINOCOMUNICACIONESI’,
-    fichas: [
+	"identificador": "DOMINOCOMUNICACIONESI",
+    "fichas": [
         {
-            token: ‘estoesuntoken’,
-            entero_uno: 6,
+            "token": "estoesuntoken",
+            "entero_uno": 6,
             entero_dos: 1
         },
         {
-            token: ‘estoesuntoken’,
-            entero_uno: 6,
-            entero_dos: 2
+            "token": "estoesuntoken",
+            "entero_uno": 6,
+            "entero_dos": 2
         },
         {
-            token: ‘estoesuntoken’,
-            entero_uno: 6,
-            entero_dos: 3
+            "token": "estoesuntoken",
+            "entero_uno": 6,
+            "entero_dos": 3
         },
         {
-            token: ‘estoesuntoken’,
-            entero_uno: 6,
-            entero_dos: 4
+            "token": "estoesuntoken",
+            "entero_uno": 6,
+            "entero_dos": 4
         }
     ]
 }
@@ -136,20 +136,19 @@ Ejemplo:
 Mensaje de juego:
 ```json
 {
-	identificador: ‘DOMINOCOMUNICACIONESI’
-	jugador: //MAC del jugador que debe iniciar o que tiene el turno
-	tipo: 0,
-	punta_uno: //Número inicial de la lista o -1
-    punta_dos: //Número final de la lista o -1
-    evento_pasado: {
-            tipo: 0,
-            jugador: //MAC de quien jugó
-    ficha: { entero_uno: 6, 
-    entero_dos: 6, 
-    punta: true //Booleano indicando el lugar de
-                    juego. True: punta uno. False:
-                    punta dos 
-    } //Este campo no existirá en el tipo de evento 2
+	"identificador": "DOMINOCOMUNICACIONESI",
+	"jugador": "MAC del jugador que debe iniciar o que tiene el turno"
+	"tipo": 0,
+	"punta_uno": "Número inicial de la lista o -1"
+    	"punta_dos": "Número final de la lista o -1"
+    	"evento_pasado": {
+            "tipo": 0,
+            "jugador": //MAC de quien jugó
+    	"ficha": { 
+		"entero_uno": 6, 
+    		"entero_dos": 6, 
+    		"punta": "true //Booleano indicando el lugar de juego. True: punta uno. False: punta dos "
+    	} //Este campo no existirá en el tipo de evento 2
     } 
 }
 ```
@@ -159,11 +158,11 @@ Mensaje de juego:
 Mensaje de fin de ronda:
 ```json
 {
-	identificador: ‘DOMINOCOMUNICACIONESI’,
-	jugador: //MAC del jugador que ganó la ronda,
-	tipo: 1,
-	puntuacion: //Puntuación del ganador de la ronda
-	razon: //Descripción del fin de la ronda. Máximo 45 caracteres	
+	"identificador": "DOMINOCOMUNICACIONESI",
+	"jugador": "MAC del jugador que ganó la ronda",
+	"tipo": 1,
+	"puntuacion": "Puntuación del ganador de la ronda",
+	"razon": "Descripción del fin de la ronda. Máximo 45 caracteres"
 }
 ```
 
