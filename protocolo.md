@@ -90,6 +90,13 @@ Al iniciar la partida, el servidor envía las fichas a cada jugador mediante uni
 ```json
 	{
 	"identificador": "DOMINOCOMUNICACIONESI",
+    "jugadores": [
+        "identificador_jugador_1",
+        "identificador_jugador_2",
+        "identificador_jugador_3",
+        "identificador_jugador_4"
+    ],
+    "identificador" : "Identificador que la mesa genera para el jugador al que le envia estas fichas.",
     "fichas": [
         {
             "token": "estoesuntoken",
@@ -115,6 +122,8 @@ Al iniciar la partida, el servidor envía las fichas a cada jugador mediante uni
 }
 ```
 
+Además de las fichas, también le envía a cada jugador su identificador asociado a través del campo ```identificador``` y los identificadores de todos los jugadores conectados a la mesa usando un array de strings almacenados en el campo ```jugadores```.
+
 *Nota:* el array de fichas siempre debe contener 7 fichas para que cada jugador pueda comenzar la partida. Además, se envía un token único con la finalidad de que las jugadas de los clientes sean mediante el envío de dicho token y no con los valores. El servidor será quien valide estas condiciones
 
 
@@ -137,13 +146,13 @@ Mensaje de juego:
 ```json
 {
 	"identificador": "DOMINOCOMUNICACIONESI",
-	"jugador": "MAC del jugador que debe iniciar o que tiene el turno",
+	"jugador": "Identificador del jugador que debe iniciar o que tiene el turno",
 	"tipo": 0,
 	"punta_uno": "Número inicial de la lista o -1",
     "punta_dos": "Número final de la lista o -1",
     "evento_pasado": {
             "tipo": 0,
-            "jugador": "MAC de quien jugó",
+            "jugador": "Identificador de quien jugó",
     	    "ficha": { 
 		        "entero_uno": 6, 
     		    "entero_dos": 6
@@ -160,7 +169,7 @@ Mensaje de fin de ronda:
 ```json
 {
 	"identificador": "DOMINOCOMUNICACIONESI",
-	"jugador": "MAC del jugador que ganó la ronda",
+	"jugador": "Identificador del jugador que ganó la ronda",
 	"tipo": 1,
 	"puntuacion": "Puntuación del ganador de la ronda",
 	"razon": "Descripción del fin de la ronda. Máximo 45 caracteres"
@@ -171,12 +180,12 @@ Mensaje de fin de partida:
 ```json
 {
 	"identificador": "DOMINOCOMUNICACIONESI",
-	"jugador": "MAC del jugador que ganó la partida",
+	"jugador": "Identificador del jugador que ganó la partida",
 	"tipo": 2,
 	//Puntuación de los jugadores
 	"puntuacion_general": [
         {
-            "jugador": "MAC del jugador",
+            "jugador": "Identificador del jugador",
             "puntuacion": "Puntuación del jugador"
         }
     ],
@@ -188,7 +197,7 @@ Mensaje de desconexión:
 ```json
 {
 	"identificador": "DOMINOCOMUNICACIONESI",
-	"jugador": "MAC del jugador que se desconectó",
+	"jugador": "Identificador del jugador que se desconectó",
 	"tipo": 3
 }
 ```
@@ -215,7 +224,7 @@ Jugador que no está en turno (mensaje unicast):
 ```json
 {
 	"identificador": "DOMINOCOMUNICACIONESI",
-	"jugador": "MAC del jugador"
+	"jugador": "Identificador del jugador"
 }
 ```
 
