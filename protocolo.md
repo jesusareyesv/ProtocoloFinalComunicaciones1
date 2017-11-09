@@ -88,7 +88,8 @@ El servidor responde al unicast del cliente con un mensaje para confirmar la con
 
 Luego de que se tienen todos los jugadores en la mesa el servidor enviará solo mensajes de juego, dichos mensajes serán multicast (excepto el de asignación de fichas) y se podrán identificar a través de un campo denominado ```tipo```.
 
-*Tipos de mensajes del servidor*
+**Tipos de mensajes del servidor**
+
 Valor | Tipo
 ----- | ----
 0 | mensaje de inicio de juego
@@ -207,7 +208,6 @@ Mensaje de juego:
     		    "entero_dos": 6
             },
     		"punta": "true //Booleano indicando el lugar de juego. True: punta uno. False: punta dos "
-    	} //Este campo no existirá en el tipo de evento 2
     } 
 }
 ```
@@ -234,7 +234,6 @@ Este mensaje indica el final de una partida y las puntuaciones de todos los juga
 	"identificador": "DOMINOCOMUNICACIONESI",
 	"jugador": "Identificador del jugador que ganó la partida",
 	"tipo": 2,
-	//Puntuación de los jugadores
 	"puntuacion_general": [
         {
             "jugador": "Identificador del jugador",
