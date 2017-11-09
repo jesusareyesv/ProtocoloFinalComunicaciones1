@@ -88,7 +88,7 @@ El servidor responde al unicast del cliente con un mensaje para confirmar la con
 
 Luego de que se tienen todos los jugadores en la mesa el servidor enviará solo mensajes de juego, dichos mensajes serán multicast (excepto el de asignación de fichas) y se podrán identificar a través de un campo denominado ```tipo```.
 
-*Tipos de mensajes del servidor*
+**Tipos de mensajes del servidor**
 
 Valor | Tipo
 ----- | ----
