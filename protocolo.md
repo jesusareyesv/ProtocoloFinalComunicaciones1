@@ -104,7 +104,7 @@ Ejemplos:
 
 ##### Mensaje de inicio de juego
 
-Este mensaje se envía cuando la mesa decide que debe iniciarse el juego. Contiene los jugadores que se hallan en la mesa y el identificador que se le asigna al jugador al que se le está enviando el unicast.
+Este mensaje se envía cuando la mesa decide que debe iniciarse el juego. Contiene los jugadores que se hallan en la mesa.
 ```json
 {
 	"identificador": "DOMINOCOMUNICACIONESI",
@@ -126,8 +126,7 @@ Este mensaje se envía cuando la mesa decide que debe iniciarse el juego. Contie
             "identificador" : "identificador_jugador_4", 
             "nombre" : "nombre que el jugador 4 le envió al servidor"
         }
-    ],
-    "jugador" : "Identificador que la mesa genera para el jugador al que le envia estas fichas."
+    ]
 }
 ```
 ##### Mensaje de inicio de ronda
@@ -259,7 +258,7 @@ Este mensaje indica si algún jugador se desconectó de la mesa durante el juego
 
 Cada jugador justo después del mensaje de juego enviará un mensaje unicast con la información de su jugada, esto si está en turno, si no, un mensaje para confirmar que sigue en línea. Ejemplo:
 
-#####Jugador en turno y jugando
+##### Jugador en turno y jugando
 
 ```json
 {
