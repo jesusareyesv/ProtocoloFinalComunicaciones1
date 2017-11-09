@@ -45,7 +45,7 @@ Cada objeto de tendrá en su body una clave identificador con el valor DOMINOCOM
 }
 ```
 
-El servidor inicia una mesa escuchando por el puerto 3001.
+El servidor inicia una mesa escuchando por el *puerto 3001*.
 
 El cliente se inicia y envía un broadcast para conocer las mesas disponibles. Ejemplo:
 ```json
@@ -58,7 +58,7 @@ El servidor responde (si y solo si, hay por lo menos un espacio disponible) al b
 ```json
 {
 	"identificador": "DOMINOCOMUNICACIONESI",
-    	"nombre_mesa": "Nombre de la mesa definido por el servidor"
+    "nombre_mesa": "Nombre de la mesa definido por el servidor"
 }
 ```
 
@@ -66,13 +66,9 @@ El cliente, luego de conocer las mesas disponibles, selecciona la mesa a la que 
 ```json
 {
 	"identificador": "DOMINOCOMUNICACIONESI",
-    	"nombre_jugador": "Nombre del jugador definido por el cliente"
+    "nombre_jugador": "Nombre del jugador definido por el cliente"
 }
 ```
-
-
-
-
 
 
 El servidor responde al unicast del cliente con un mensaje para confirmar la conexión. Ejemplo:
@@ -80,23 +76,78 @@ El servidor responde al unicast del cliente con un mensaje para confirmar la con
 {
 	"identificador": "DOMINOCOMUNICACIONESI",
 	"multicast_ip": "IP multicast definida por el servidor",
-	"disponible": "Verdadero o falso. Esto es un booleano"
+	"jugador" : "Identificador que la mesa genera para el jugador al que le envia estas fichas."
 }
 ```
 
-*Nota:* El servidor espera 30 segundos, a partir del ingreso del segundo jugador, y reiniciando dicho conteo cada vez que entra alguien. Y el juego se inicia cuando el conteo es excedido o cuando la mesa se llena
+*Nota:* El servidor espera 30 segundos, a partir del ingreso del segundo jugador, y reiniciando dicho conteo cada vez que entra alguien. El juego se inicia cuando el conteo es excedido o cuando la mesa se llena.
 
-Al iniciar la partida, el servidor envía las fichas a cada jugador mediante unicast. Ejemplo:
+### Mensajes de juego
+
+#### Mensajes del servidor
+
+Luego de que se tienen todos los jugadores en la mesa el servidor enviará solo mensajes de juego, dichos mensajes serán multicast (excepto el de asignación de fichas) y se podrán identificar a través de un campo denominado ```tipo```.
+
+*Tipos de mensajes del servidor*
+Valor | Tipo
+----- | ----
+0 | mensaje de inicio de juego
+1 | mensaje de inicio de ronda
+2 | mensaje de asignación de fichas
+3 | mensaje de control de juego
+4 | mensaje de fin de ronda
+5 | mensaje de fin de partida
+6 | mensaje de desconexión
+
+Ejemplos:
+
+##### Mensaje de inicio de juego
+
+Este mensaje se envía cuando la mesa decide que debe iniciarse el juego. Contiene los jugadores que se hallan en la mesa y el identificador que se le asigna al jugador al que se le está enviando el unicast.
 ```json
-	{
+{
 	"identificador": "DOMINOCOMUNICACIONESI",
+    "tipo" : 0,
     "jugadores": [
-        "identificador_jugador_1",
-        "identificador_jugador_2",
-        "identificador_jugador_3",
-        "identificador_jugador_4"
+        {
+            "identificador" : "identificador_jugador_1", 
+            "nombre" : "nombre que el jugador 1 le envió al servidor"
+        },
+        {
+            "identificador" : "identificador_jugador_2", 
+            "nombre" : "nombre que el jugador 2 le envió al servidor"
+        },
+        {
+            "identificador" : "identificador_jugador_3", 
+            "nombre" : "nombre que el jugador 3 le envió al servidor"
+        },
+        {
+            "identificador" : "identificador_jugador_4", 
+            "nombre" : "nombre que el jugador 4 le envió al servidor"
+        }
     ],
-    "identificador" : "Identificador que la mesa genera para el jugador al que le envia estas fichas.",
+    "jugador" : "Identificador que la mesa genera para el jugador al que le envia estas fichas."
+}
+```
+##### Mensaje de inicio de ronda
+
+Contiene el número de ronda actual. Es multicast.
+
+```json
+{
+    "identificador": "DOMINOCOMUNICACIONESI",
+    "tipo" : 1,
+    "ronda" : 1
+}
+```
+
+##### Mensaje de asignación de fichas
+
+Este mensaje se envía por unicast TCP. Contiene las fichas asignadas a cada jugador.
+```json
+{
+    "identificador": "DOMINOCOMUNICACIONESI",
+    "tipo" : 2,
     "fichas": [
         {
             "token": "estoesuntoken",
@@ -122,23 +173,21 @@ Al iniciar la partida, el servidor envía las fichas a cada jugador mediante uni
 }
 ```
 
-Además de las fichas, también le envía a cada jugador su identificador asociado a través del campo ```identificador``` y los identificadores de todos los jugadores conectados a la mesa usando un array de strings almacenados en el campo ```jugadores```.
-
 *Nota:* el array de fichas siempre debe contener 7 fichas para que cada jugador pueda comenzar la partida. Además, se envía un token único con la finalidad de que las jugadas de los clientes sean mediante el envío de dicho token y no con los valores. El servidor será quien valide estas condiciones
-
-
-El servidor envía un mensaje multicast justo antes de comenzar un turno. Los mensajes del servidor se podrán identificar por el campo tipo
-
-0: mensaje normal de juego
-1: mensaje de fin de ronda
-2: mensaje de fin de partida
-3: mensaje de desconexión
  
-… También, cuando sea un mensaje normal de juego, habrá un campo que se llamará evento_pasado, dentro del mismo estará la información de la jugada anterior, dicha jugada se podrá identificar con su tipo
+##### Mensaje de control de juego
 
-0: jugada normal
-1: jugada errónea
-2: pasó
+Este mensaje es el que usará el servidor para definir quién jugó la última vez y a quién le toca jugar.
+
+Los campo que contiene son:
+* ```identificador``` => el identificador del protocolo ```"DOMINOCOMUNICACIONESI"```.
+* ```jugador``` => Identificador del jugador que debe iniciar o que tiene el turno.
+* ```tipo``` => el tipo para este mensaje será 3.
+* ```punta_uno``` y ```punta_dos``` indican los números al inicio y final de la lista de fichas jugadas.
+* ```evento_pasado``` contiene la información de la jugada anterior, dicha jugada se podrá identificar con su tipo:
+    * 0: jugada normal
+    * 1: jugada errónea
+    * 2: pasó
 
 Ejemplo:
 
@@ -162,10 +211,11 @@ Mensaje de juego:
     } 
 }
 ```
-
 *Nota:* si es el inicio de la ronda punta_uno y punta_dos serán -1
 
-Mensaje de fin de ronda:
+##### Mensaje de fin de ronda
+
+Este mensaje indica el final de una ronda, su ganador y su puntuación. Es multicast.
 ```json
 {
 	"identificador": "DOMINOCOMUNICACIONESI",
@@ -176,7 +226,9 @@ Mensaje de fin de ronda:
 }
 ```
 
-Mensaje de fin de partida:
+##### Mensaje de fin de partida
+
+Este mensaje indica el final de una partida y las puntuaciones de todos los jugadores. Es multicast.
 ```json
 {
 	"identificador": "DOMINOCOMUNICACIONESI",
@@ -193,7 +245,9 @@ Mensaje de fin de partida:
 }
 ```
 
-Mensaje de desconexión:
+##### Mensaje de desconexión
+
+Este mensaje indica si algún jugador se desconectó de la mesa durante el juego. Es multicast.
 ```json
 {
 	"identificador": "DOMINOCOMUNICACIONESI",
@@ -202,10 +256,11 @@ Mensaje de desconexión:
 }
 ```
 
+#### Mensajes del jugador
 
 Cada jugador justo después del mensaje de juego enviará un mensaje unicast con la información de su jugada, esto si está en turno, si no, un mensaje para confirmar que sigue en línea. Ejemplo:
 
-Jugador en turno y jugando:
+#####Jugador en turno y jugando
 
 ```json
 {
@@ -219,7 +274,7 @@ Jugador en turno y jugando:
 
 *Nota:* Si el token es -1, significa que el jugador quiere pasar.
 
-Jugador que no está en turno (mensaje unicast):
+##### *Deprecated*: Jugador que no está en turno (mensaje unicast) [Se sugiere su omisión]
 
 ```json
 {
