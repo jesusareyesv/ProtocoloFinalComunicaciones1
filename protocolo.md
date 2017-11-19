@@ -36,7 +36,7 @@
 - El servidor y el cliente llevan los puntajes generales internamente y solo se intercambia lo establecido en el protocolo.
 - Las conexiones unicast serán TCP.
 
-Durante las comunicaciones del juego se enviarán exclusivamente objetos de tipo JSON.
+Durante las comunicaciones del juego se enviarán exclusivamente mensajes codificados como JSON.
 
 Cada objeto de tendrá en su body una clave identificador con el valor DOMINOCOMUNICACIONESI. Ejemplo:
 ```json
@@ -45,16 +45,9 @@ Cada objeto de tendrá en su body una clave identificador con el valor DOMINOCOM
 }
 ```
 
-El servidor inicia una mesa escuchando por el *puerto 3001*.
+**El servidor inicia una mesa de la siguiente forma:**
+* El servidor emitirá mensajes a través de UDP Broadcast dirigidos al puerto 3001 de los clientes activos. La emisión se hará cada 5 seg mientras la mesa se encuentre esperando jugadores, para evitar la congestión de la red. Estos mensajes contendrán el nombre de la mesa. Ejemplo:
 
-El cliente se inicia y envía un broadcast para conocer las mesas disponibles. Ejemplo:
-```json
-{ 	
-    "identificador": "DOMINOCOMUNICACIONESI"
-}
-```
-
-El servidor responde (si y solo si, hay por lo menos un espacio disponible) al broadcast del cliente con un mensaje unicast UDP para darle a saber que hay una mesa disponible. Ejemplo:
 ```json
 {
 	"identificador": "DOMINOCOMUNICACIONESI",
@@ -62,7 +55,9 @@ El servidor responde (si y solo si, hay por lo menos un espacio disponible) al b
 }
 ```
 
-El cliente, luego de conocer las mesas disponibles, selecciona la mesa a la que se quiere conectar enviándole un mensaje unicast TCP al servidor. Ejemplo:
+* El servidor esperará la conexión TCP de los jugadores a través del puerto 3001, hasta que se cumplan las condiciones necesarias para iniciar el juego. Luego de iniciado el juego se rechazarán las conexiones entrantes.
+
+El cliente ha de escuchar los mensajes broadcast para conocer las mesas disponibles, luego selecciona la mesa a la que se quiere conectar, intenta conectarse y si su conexión no es rechazada envía un mensaje unicast TCP al servidor. Ejemplo:
 ```json
 {
 	"identificador": "DOMINOCOMUNICACIONESI",
