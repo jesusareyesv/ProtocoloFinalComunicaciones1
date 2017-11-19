@@ -196,7 +196,7 @@ Mensaje de juego:
 {
 	"identificador": "DOMINOCOMUNICACIONESI",
 	"jugador": "Identificador del jugador que debe iniciar o que tiene el turno",
-	"tipo": 0,
+	"tipo": 3,
 	"punta_uno": "Número inicial de la lista o -1",
     "punta_dos": "Número final de la lista o -1",
     "evento_pasado": {
@@ -219,7 +219,7 @@ Este mensaje indica el final de una ronda, su ganador y su puntuación. Es multi
 {
 	"identificador": "DOMINOCOMUNICACIONESI",
 	"jugador": "Identificador del jugador que ganó la ronda",
-	"tipo": 1,
+	"tipo": 4,
 	"puntuacion": "Puntuación del ganador de la ronda",
 	"razon": "Descripción del fin de la ronda. Máximo 45 caracteres"
 }
@@ -232,7 +232,7 @@ Este mensaje indica el final de una partida y las puntuaciones de todos los juga
 {
 	"identificador": "DOMINOCOMUNICACIONESI",
 	"jugador": "Identificador del jugador que ganó la partida",
-	"tipo": 2,
+	"tipo": 5,
 	"puntuacion_general": [
         {
             "jugador": "Identificador del jugador",
@@ -250,7 +250,7 @@ Este mensaje indica si algún jugador se desconectó de la mesa durante el juego
 {
 	"identificador": "DOMINOCOMUNICACIONESI",
 	"jugador": "Identificador del jugador que se desconectó",
-	"tipo": 3
+	"tipo": 6
 }
 ```
 
